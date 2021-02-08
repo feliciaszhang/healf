@@ -1,36 +1,35 @@
 import React from "react";
 import { GetStaticProps } from "next";
-import Post, { PostProps } from "../components/Post";
+import Program, { ProgramProps } from "../components/Program";
 import prisma from "../lib/prisma";
 import { Heading, Box } from "@chakra-ui/react";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const feed = await prisma.post.findMany({
+  const programs = await prisma.program.findMany({
     where: { published: true },
-    include: {
-      author: {
-        select: { name: true },
-      },
+    select: {
+      title: true,
+      id: true
     },
   });
-  return { props: { feed } };
+  return { props: { programs } };
 };
 
 type Props = {
-  feed: PostProps[];
+  programs: ProgramProps[];
 };
 
-const Blog: React.FC<Props> = (props) => {
+const Index: React.FC<Props> = ({ programs }) => {
   return (
     <Box>
-      <Heading fontSize="xl">Feed</Heading>
+      <Heading fontSize="xl">Programs</Heading>
       <Box>
-        {props.feed.map((post) => (
-          <Post post={post} />
+        {programs.map((program) => (
+          <Program program={program} />
         ))}
       </Box>
     </Box>
   );
 };
 
-export default Blog;
+export default Index;
