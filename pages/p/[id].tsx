@@ -1,9 +1,8 @@
-import React from "react"
-import { GetServerSideProps } from "next"
-import ReactMarkdown from "react-markdown"
-import Layout from "../../components/Layout"
-import { PostProps } from "../../components/Post"
-import prisma from '../../lib/prisma'
+import React from "react";
+import { GetServerSideProps } from "next";
+import { PostProps } from "../../components/Post";
+import prisma from "../../lib/prisma";
+import { Heading, Box, Text } from "@chakra-ui/react";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const post = await prisma.post.findUnique({
@@ -15,48 +14,24 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         select: { name: true },
       },
     },
-  })
+  });
   return {
     props: post,
-  }
-}
+  };
+};
 
 const Post: React.FC<PostProps> = (props) => {
-  let title = props.title
+  let title = props.title;
   if (!props.published) {
-    title = `${title} (Draft)`
+    title = `${title} (Draft)`;
   }
 
   return (
-    <Layout>
-      <div>
-        <h2>{title}</h2>
-        <p>By {props?.author?.name || "Unknown author"}</p>
-        <ReactMarkdown source={props.content} />
-      </div>
-      <style jsx>{`
-        .page {
-          background: white;
-          padding: 2rem;
-        }
+    <Box>
+      <Heading>{title}</Heading>
+      <Text>By {props?.author?.name || "Unknown author"}</Text>
+    </Box>
+  );
+};
 
-        .actions {
-          margin-top: 2rem;
-        }
-
-        button {
-          background: #ececec;
-          border: 0;
-          border-radius: 0.125rem;
-          padding: 1rem 2rem;
-        }
-
-        button + button {
-          margin-left: 1rem;
-        }
-      `}</style>
-    </Layout>
-  )
-}
-
-export default Post
+export default Post;

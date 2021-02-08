@@ -1,6 +1,6 @@
 import React from "react";
 import Router from "next/router";
-import ReactMarkdown from "react-markdown";
+import { Heading, Text, Link, Box } from "@chakra-ui/react";
 
 export type PostProps = {
   id: number;
@@ -16,17 +16,10 @@ export type PostProps = {
 const Post: React.FC<{ post: PostProps }> = ({ post }) => {
   const authorName = post.author ? post.author.name : "Unknown author";
   return (
-    <div onClick={() => Router.push("/p/[id]", `/p/${post.id}`)}>
-      <h2>{post.title}</h2>
-      <small>By {authorName}</small>
-      <ReactMarkdown source={post.content} />
-      <style jsx>{`
-        div {
-          color: inherit;
-          padding: 2rem;
-        }
-      `}</style>
-    </div>
+    <Box>
+      <Heading onClick={() => Router.push("/p/[id]", `/p/${post.id}`)} as={Link}>{post.title}</Heading>
+      <Text>By {authorName}</Text>
+    </Box>
   );
 };
 
