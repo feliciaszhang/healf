@@ -2,7 +2,8 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { ProgramProps } from "../../components/Program";
 import prisma from "../../lib/prisma";
-import { Heading, Box, Text } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
+import Layout from "../../components/Layout";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const program = await prisma.program.findUnique({
@@ -24,9 +25,9 @@ const Program: React.FC<ProgramProps> = (props) => {
   }
 
   return (
-    <Box>
+    <Layout>
       <Heading>{title}</Heading>
-    </Box>
+    </Layout>
   );
 };
 
