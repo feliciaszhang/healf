@@ -23,20 +23,30 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
             <Heading fontSize="xl">HEALF</Heading>
           </Link>
         </NextLink>
-        <HStack ml="auto">
-          {user?.isLoggedIn ? <Text>{user.name}</Text> : <Text>NULL</Text>}
-          <NextLink href="/signin">
-            <Link ml={4} mr={4}>Sign In</Link>
-          </NextLink>
-          <Link
-            as={Link}
-            onClick={async () => {
-              await mutateUser(fetch("/api/signout", { method: "POST" }));
-              router.push("/");
-            }}
-          >
-            Sign Out
-          </Link>
+        <HStack ml="auto" spacing={6}>
+          {user?.isLoggedIn ? (
+            <>
+              <Text>{user.name}</Text>
+              <Link
+                as={Link}
+                onClick={async () => {
+                  await mutateUser(fetch("/api/signout", { method: "POST" }));
+                  router.push("/");
+                }}
+              >
+                Sign Out
+              </Link>
+            </>
+          ) : (
+            <>
+              <NextLink href="/signin">
+                <Link>Sign In</Link>
+              </NextLink>
+              <NextLink href="/signup">
+                <Link>Sign Up</Link>
+              </NextLink>
+            </>
+          )}
         </HStack>
       </Flex>
     </Flex>
