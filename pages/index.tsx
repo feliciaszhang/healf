@@ -2,7 +2,7 @@ import React from "react";
 import { GetStaticProps } from "next";
 import Program, { ProgramProps } from "../components/Program";
 import prisma from "../lib/prisma";
-import { Heading, Box } from "@chakra-ui/react";
+import { Heading, Box, Text } from "@chakra-ui/react";
 import Layout from "../components/Layout";
 import useEvents from "../lib/useEvents";
 import useUser from "../lib/useUser";
@@ -28,9 +28,9 @@ const Index: React.FC<Props> = ({ programs }) => {
   return (
     <Layout>
       <Box m={4}>
+        <Text>{JSON.stringify(user, undefined, 2)}</Text>
         <Heading fontSize="xl">Programs</Heading>
         <Box>
-        {JSON.stringify(user, undefined, 2)}
           {programs.map((program) => (
             <Program program={program} />
           ))}
