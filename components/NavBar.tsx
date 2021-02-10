@@ -1,17 +1,14 @@
-import {
-  Box,
-  Link,
-  Flex,
-  Button,
-  theme,
-  Heading,
-  HStack,
-} from "@chakra-ui/react";
+import { HStack, Link, Flex, Text, Heading } from "@chakra-ui/react";
 import NextLink from "next/link";
+import useUser from "../lib/useUser";
+import { useRouter } from "next/router";
 
 interface NavBarProps {}
 
 const NavBar: React.FC<NavBarProps> = ({}) => {
+  const { user, mutateUser } = useUser({});
+  const router = useRouter();
+
   return (
     <Flex
       zIndex={1}
@@ -26,14 +23,21 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
             <Heading fontSize="xl">HEALF</Heading>
           </Link>
         </NextLink>
-        <Box ml="auto">
+        <HStack ml="auto">
+          {user?.isLoggedIn ? <Text>{user.name}</Text> : <Text>NULL</Text>}
           <NextLink href="/signin">
-            <Link mr={4}>Sign In</Link>
+            <Link ml={4} mr={4}>Sign In</Link>
           </NextLink>
-          <NextLink href="/signup">
-            <Link>Sign Up</Link>
-          </NextLink>
-        </Box>
+          <Link
+            as={Link}
+            onClick={async () => {
+              await mutateUser(fetch("/api/signout", { method: "POST" }));
+              router.push("/");
+            }}
+          >
+            Sign Out
+          </Link>
+        </HStack>
       </Flex>
     </Flex>
   );
