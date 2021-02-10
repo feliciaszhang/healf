@@ -1,13 +1,13 @@
 import NavBar from "./NavBar";
-import { Wrapper } from "./Wrapper";
+import { Box } from "@chakra-ui/react";
 
 export const Layout: React.FC<{}> = ({ children }) => {
   return (
     <>
-    <NavBar />
-    <Wrapper>
-      {children}
-    </Wrapper>
+      <NavBar />
+      <Box mt={8} mx="auto" maxW="800px" w="100%">
+        {children}
+      </Box>
     </>
   );
 };

@@ -1,9 +1,9 @@
 import useSWR from "swr";
 
-export default function useEvents(user) {
+export const useEvents = (user) => {
   const { data: events } = useSWR(user?.isLoggedIn && `/api/events`);
-
   const loadingEvents = events === undefined;
-
   return { events, loadingEvents };
 }
+
+export default useEvents;

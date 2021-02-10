@@ -1,6 +1,6 @@
-import { withIronSession } from "next-iron-session";
+import { withIronSession, Handler } from "next-iron-session";
 
-export const withSession = (handler) => {
+export const withSession = (handler: Handler) => {
  return withIronSession(handler, {
   password: process.env.SIGNIN_PRIVATE_KEY,
   cookieName: "healf-session",
