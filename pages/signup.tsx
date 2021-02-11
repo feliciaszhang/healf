@@ -3,8 +3,7 @@ import { useRouter } from "next/router";
 import useUser from "../lib/useUser";
 import Layout from "../components/Layout";
 import { InputField } from "../components/InputField";
-import { Spacer, Button, Link } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Spacer, Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 
 const SignUp = () => {
