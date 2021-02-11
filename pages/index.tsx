@@ -8,6 +8,7 @@ import useEvents from "../lib/useEvents";
 import useUser from "../lib/useUser";
 
 export const getStaticProps: GetStaticProps = async () => {
+
   const programs = await prisma.program.findMany({
     where: { published: true },
     select: {

@@ -7,7 +7,7 @@ import { Spacer, Button, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { Form, Formik } from "formik";
 
-const SignIn = () => {
+const SignUp = () => {
   const { mutateUser } = useUser({
     redirectTo: "/",
     redirectIfFound: true,
@@ -22,7 +22,7 @@ const SignIn = () => {
         onSubmit={async (values, { setErrors }) => {
           try {
             const response = await mutateUser(
-              fetch("/api/signin", {
+              fetch("/api/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
@@ -53,11 +53,8 @@ const SignIn = () => {
               label="Password"
             />
             <Button mt={4} type="submit" isLoading={isSubmitting}>
-              Sign In
+              Sign Up
             </Button>
-            <NextLink href="/forgot-password">
-              <Link>Forgot Password</Link>
-            </NextLink>
           </Form>
         )}
       </Formik>
@@ -65,4 +62,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
