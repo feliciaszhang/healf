@@ -1,4 +1,4 @@
-import { HStack, Link, Flex, Text, Heading } from "@chakra-ui/react";
+import { HStack, Link, Flex, Button, Heading } from "@chakra-ui/react";
 import NextLink from "next/link";
 import useUser from "../lib/useUser";
 import { useRouter } from "next/router";
@@ -26,7 +26,6 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
         <HStack ml="auto" spacing={6}>
           {user?.isLoggedIn ? (
             <>
-              <Text>{user.name}</Text>
               <Link
                 as={Link}
                 onClick={async () => {
@@ -36,6 +35,15 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
               >
                 Sign Out
               </Link>
+              {user?.role === "ADMIN" && (
+                <Button
+                  colorScheme="blackAlpha"
+                  variant="outline"
+                  mt={8}
+                >
+                  Import
+                </Button>
+              )}
             </>
           ) : (
             <>
