@@ -16,7 +16,7 @@ const SignUp = () => {
   const [errorMsg, setErrorMsg] = useState("");
 
   return (
-    <Layout>
+    <Layout variant="small">
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
@@ -52,7 +52,13 @@ const SignUp = () => {
               type="password"
               label="Password"
             />
-            <Button mt={4} type="submit" isLoading={isSubmitting}>
+            <Button
+                colorScheme="blackAlpha"
+                variant="outline"
+                mt={8}
+                type="submit"
+                isLoading={isSubmitting}
+              >
               Sign Up
             </Button>
           </Form>

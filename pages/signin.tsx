@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import useUser from "../lib/useUser";
 import Layout from "../components/Layout";
 import { InputField } from "../components/InputField";
-import { Spacer, Button, Link } from "@chakra-ui/react";
+import { Spacer, Button, Link, Flex, Box } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { Form, Formik } from "formik";
 
@@ -16,7 +16,7 @@ const SignIn = () => {
   const [errorMsg, setErrorMsg] = useState("");
 
   return (
-    <Layout>
+    <Layout variant="small">
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
@@ -29,7 +29,7 @@ const SignIn = () => {
               })
             );
             if (response.status === 500) {
-              console.log(response)
+              console.log(response);
             } else if (response.data?.login.user) {
               if (typeof router.query.next === "string") {
                 router.push(router.query.next);
@@ -38,7 +38,7 @@ const SignIn = () => {
               }
             }
           } catch (error) {
-            console.log(error)
+            console.log(error);
           }
         }}
       >
@@ -52,12 +52,22 @@ const SignIn = () => {
               type="password"
               label="Password"
             />
-            <Button mt={4} type="submit" isLoading={isSubmitting}>
-              Sign In
-            </Button>
-            <NextLink href="/forgot-password">
-              <Link>Forgot Password</Link>
-            </NextLink>
+            <Flex flex={1} m="auto">
+              <Button
+                colorScheme="blackAlpha"
+                variant="outline"
+                mt={8}
+                type="submit"
+                isLoading={isSubmitting}
+              >
+                Sign In
+              </Button>
+              <Box ml="auto">
+                <NextLink href="/forgot-password">
+                  <Link>Forgot Password</Link>
+                </NextLink>
+              </Box>
+            </Flex>
           </Form>
         )}
       </Formik>
