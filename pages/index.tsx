@@ -5,7 +5,6 @@ import prisma from "../lib/prisma";
 import { Heading, Box, Text } from "@chakra-ui/react";
 import Layout from "../components/Layout";
 import useProgram from "../lib/useProgram";
-import useUser from "../lib/useUser";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const programs = await prisma.program.findMany({
