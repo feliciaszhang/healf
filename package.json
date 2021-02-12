@@ -23,8 +23,11 @@
     "next-iron-session": "^4.1.10",
     "react": "16.14.0",
     "react-dom": "16.14.0",
+    "react-dropzone": "^11.3.1",
     "react-markdown": "5.0.2",
-    "swr": "^0.4.2"
+    "react-spreadsheet-component": "^1.0.2",
+    "swr": "^0.4.2",
+    "xlsx": "^0.16.9"
   },
   "devDependencies": {
     "@prisma/cli": "^2.16.0",

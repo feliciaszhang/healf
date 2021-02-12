@@ -1,13 +1,19 @@
-import { HStack, Link, Flex, Button, Heading } from "@chakra-ui/react";
+import { HStack, Link, Flex, Button, Heading, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import useUser from "../lib/useUser";
 import { useRouter } from "next/router";
+import Dropzone from "react-dropzone";
+import XLSX from "xlsx";
+import { useState } from "react";
+import useProgram from "../lib/useProgram";
 
 interface NavBarProps {}
 
 const NavBar: React.FC<NavBarProps> = ({}) => {
   const { user, mutateUser } = useUser({});
+  const { mutateProgram } = useProgram();
   const router = useRouter();
+  const [program, setProgram] = useState([]);
 
   return (
     <Flex
@@ -36,13 +42,55 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
                 Sign Out
               </Link>
               {user?.role === "ADMIN" && (
-                <Button
-                  colorScheme="blackAlpha"
-                  variant="outline"
-                  mt={8}
+                <Dropzone
+                  onDrop={(acceptedFiles) => {
+                    const reader = new FileReader();
+                    const rABS = !!reader.readAsBinaryString;
+                    reader.onload = async (e) => {
+                      var bstr = e.target.result;
+                      var workbook = XLSX.read(bstr, {
+                        type: rABS ? "binary" : "array",
+                      });
+                      var sheet_name_list = workbook.SheetNames[0];
+                      var jsonFromExcel = XLSX.utils.sheet_to_json(
+                        workbook.Sheets[sheet_name_list],
+                        {
+                          raw: false,
+                          dateNF: "MM-DD-YYYY",
+                          header: 1,
+                          defval: "",
+                        }
+                      );
+                      setProgram(jsonFromExcel);
+                      console.log(JSON.stringify({ 123: "h", 456: "j" }))
+                      console.log(JSON.stringify(jsonFromExcel))
+                      try {
+                        await mutateProgram(
+                          fetch("/api/import", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 123: "h", 456: "j" }),
+                          })
+                        );
+                      } catch (error) {
+                        console.log(error);
+                      }
+                    };
+                    reader.readAsBinaryString(acceptedFiles[0]);
+                  }}
                 >
-                  Import
-                </Button>
+                  {({ getRootProps, getInputProps }) => (
+                    <Button
+                      colorScheme="blackAlpha"
+                      variant="outline"
+                      mt={8}
+                      {...getRootProps()}
+                    >
+                      <input {...getInputProps()} />
+                      <Text>Import</Text>
+                    </Button>
+                  )}
+                </Dropzone>
               )}
             </>
           ) : (
