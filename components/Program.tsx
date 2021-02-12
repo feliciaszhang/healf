@@ -1,6 +1,6 @@
 import React from "react";
 import Router from "next/router";
-import { Heading, Link, Box } from "@chakra-ui/react";
+import { Text, Link, Box } from "@chakra-ui/react";
 
 export type ProgramProps = {
   id: number;
@@ -12,9 +12,9 @@ export type ProgramProps = {
 const Program: React.FC<{ program: ProgramProps }> = ({ program }) => {
   return (
     <Box>
-      <Heading onClick={() => {
+      <Text onClick={() => {
         Router.push("/p/[id]", `/p/${program.id}`)
-        }} as={Link}>{program.title}</Heading>
+        }} as={Link}>{program.title}</Text>
     </Box>
   );
 };

@@ -2,13 +2,15 @@ import { useEffect } from "react";
 import Router from "next/router";
 import useSWR from "swr";
 
-export const useUser = ({ redirectTo = null, redirectIfFound = false }) => {
+export const useAdmin = ({ redirectTo = null, redirectIfFound = false }) => {
   const { data: user, mutate: mutateUser } = useSWR("/api/user");
   useEffect(() => {
+    console.log(user);
     if (!redirectTo || !user) return;
+    const validUser = user?.isLoggedIn && user?.role === "ADMIN";
     if (
-      (redirectTo && !redirectIfFound && !user?.isLoggedIn) ||
-      (redirectIfFound && user?.isLoggedIn)
+      (redirectTo && !redirectIfFound && !validUser) ||
+      (redirectIfFound && validUser)
     ) {
       Router.push(redirectTo);
     }
@@ -16,4 +18,4 @@ export const useUser = ({ redirectTo = null, redirectIfFound = false }) => {
   return { user, mutateUser };
 };
 
-export default useUser;
+export default useAdmin;
