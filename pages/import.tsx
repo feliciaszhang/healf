@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import useAdmin from "../lib/useAdmin";
 import Layout from "../components/Layout";
-import { Text, Button } from "@chakra-ui/react";
-import Dropzone from "react-dropzone";
+import { Text, Container } from "@chakra-ui/react";
+import Table from "../components/Table";
+import { useDropzone } from "react-dropzone";
 import XLSX from "xlsx";
 
 const Import = () => {
@@ -15,44 +16,86 @@ const Import = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [program, setProgram] = useState([]);
 
+  const baseStyle = {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "20px",
+    borderWidth: 2,
+    borderRadius: 8,
+    borderColor: "#eeeeee",
+    borderStyle: "dashed",
+    backgroundColor: "#fafafa",
+    color: "#bdbdbd",
+    outline: "none",
+    transition: "border .24s ease-in-out",
+  };
+
+  const activeStyle = {
+    borderColor: "#2196f3",
+  };
+
+  const acceptStyle = {
+    borderColor: "#00e676",
+  };
+
+  const rejectStyle = {
+    borderColor: "#ff1744",
+  };
+
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    isDragAccept,
+    isDragReject,
+  } = useDropzone({
+    maxFiles: 1,
+    accept:
+      "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    onDrop: (acceptedFiles) => {
+      const reader = new FileReader();
+      const rABS = !!reader.readAsBinaryString;
+      reader.onload = async (e) => {
+        var workbook = XLSX.read(e.target.result, {
+          type: rABS ? "binary" : "array",
+        });
+        var jsonFromExcel = XLSX.utils.sheet_to_json(
+          workbook.Sheets[workbook.SheetNames[0]],
+          {
+            raw: false,
+            dateNF: "MM-DD-YYYY",
+            header: 1,
+            defval: "",
+          }
+        );
+        setProgram(jsonFromExcel);
+      };
+      reader.readAsBinaryString(acceptedFiles[0]);
+    },
+  });
+  const style = useMemo(
+    () => ({
+      ...baseStyle,
+      ...(isDragActive ? activeStyle : {}),
+      ...(isDragAccept ? acceptStyle : {}),
+      ...(isDragReject ? rejectStyle : {}),
+    }),
+    [isDragActive, isDragReject, isDragAccept]
+  );
+
   return (
     <Layout>
-    <Text>{JSON.stringify(program)}</Text>
-      <Dropzone
-        onDrop={(acceptedFiles) => {
-          const reader = new FileReader();
-          const rABS = !!reader.readAsBinaryString;
-          reader.onload = async (e) => {
-            var bstr = e.target.result;
-            var workbook = XLSX.read(bstr, {
-              type: rABS ? "binary" : "array",
-            });
-            var sheet_name_list = workbook.SheetNames[0];
-            var jsonFromExcel = XLSX.utils.sheet_to_json(
-              workbook.Sheets[sheet_name_list],
-              {
-                raw: false,
-                dateNF: "MM-DD-YYYY",
-                header: 1,
-                defval: "",
-              }
-            );
-            setProgram(jsonFromExcel);
-          };
-          reader.readAsBinaryString(acceptedFiles[0]);
-        }}
-      >
-        {({ getRootProps, getInputProps }) => (
-          <Button
-            colorScheme="blackAlpha"
-            variant="outline"
-            {...getRootProps()}
-          >
-            <input {...getInputProps()} />
-            <Text>Import</Text>
-          </Button>
-        )}
-      </Dropzone>
+      {program.length ? (
+        <Table data={program} />
+      ) : (
+        <Container {...getRootProps({ style })}>
+          <input {...getInputProps()} />
+          <Text>Drag and drop a file here, or click to select a file</Text>
+          <Text>(Only *.xlsx files will be accepted)</Text>
+        </Container>
+      )}
     </Layout>
   );
 };

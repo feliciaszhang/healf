@@ -13,6 +13,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     <Flex
       zIndex={1}
       position="sticky"
+      background="white"
       top={0}
       p={5}
       boxShadow="0 0 8px 8px #E0E0E0"
@@ -26,29 +27,31 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
         <HStack ml="auto" spacing={6}>
           {user?.isLoggedIn ? (
             <>
-              <Link
+              {user?.role === "ADMIN" && (
+                <NextLink href="/import">
+                  <Link>Import</Link>
+                </NextLink>
+              )}
+              <Button
+                colorScheme="blackAlpha"
+                variant="outline"
                 onClick={async () => {
                   await mutateUser(fetch("/api/signout", { method: "POST" }));
                   router.push("/");
                 }}
               >
                 Sign Out
-              </Link>
-              {user?.role === "ADMIN" && (
-                <NextLink href="/import">
-                  <Button colorScheme="blackAlpha" variant="outline">
-                    Import
-                  </Button>
-                </NextLink>
-              )}
+              </Button>
             </>
           ) : (
             <>
-              <NextLink href="/signin">
-                <Link>Sign In</Link>
-              </NextLink>
               <NextLink href="/signup">
                 <Link>Sign Up</Link>
+              </NextLink>
+              <NextLink href="/signin">
+                <Button colorScheme="blackAlpha" variant="outline">
+                  Sign In
+                </Button>
               </NextLink>
             </>
           )}
