@@ -13,6 +13,9 @@ export const handler = async (req: any, res: any) => {
       password: true,
     },
   });
+  if (!user) {
+    res.status(400).json({ error: "Email / password do not match" });
+  }
   const valid = await argon2.verify(user.password, password);
   if (valid) {
     req.session.set("user", user);

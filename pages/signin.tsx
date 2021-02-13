@@ -13,7 +13,6 @@ const SignIn = () => {
     redirectIfFound: true,
   });
   const router = useRouter();
-  const [errorMsg, setErrorMsg] = useState("");
 
   return (
     <Layout variant="small">
@@ -28,8 +27,11 @@ const SignIn = () => {
                 body: JSON.stringify(values),
               })
             );
-            if (response.status === 500) {
-              console.log(response);
+            if (response.status === 400) {
+              setErrors({
+                email: "Email / password pair does not exist",
+                password: "Email / password pair does not exist",
+              });
             } else if (response.data?.login.user) {
               if (typeof router.query.next === "string") {
                 router.push(router.query.next);
@@ -38,7 +40,7 @@ const SignIn = () => {
               }
             }
           } catch (error) {
-            console.log(error);
+            setErrors(error);
           }
         }}
       >
